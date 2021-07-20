@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends CrudRepository<Post, Integer> {
-    List<Post> findByTitle(String title);
+    List<Post> findByTitleStartingWithIgnoreCase(String title);
 }
