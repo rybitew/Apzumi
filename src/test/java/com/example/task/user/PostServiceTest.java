@@ -2,31 +2,31 @@ package com.example.task.user;
 
 import com.example.task.exception.InvalidParamException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 class PostServiceTest {
 
     @Autowired
     private PostService postService;
 
-    @Mock
+    @MockBean
     private PostRepository postRepository;
 
-    @Mock
+    @MockBean
     private RestTemplate template;
 
 
@@ -61,15 +61,15 @@ class PostServiceTest {
 
     @Test
     void getAll() {
-        List<Post> posts = List.of(
+        Iterable<Post> posts = List.of(
                 new Post(1, 1, "title 1", ""),
                 new Post(2, 1, "title 2", ""),
                 new Post(3, 2, "title 3", "")
         );
-        Mockito.when(postRepository.findAll())
-                .thenReturn(posts);
+        Mockito.when(postRepository.findAll()).thenReturn(posts);
 
-        List<PostDto> postDtos = posts.stream().map(PostDto::new).collect(Collectors.toList());
+        List<PostDto> postDtos = StreamSupport.stream(posts.spliterator(), false)
+                .map(PostDto::new).collect(Collectors.toList());
         assertEquals(postDtos, postService.getAll());
     }
 
@@ -82,6 +82,11 @@ class PostServiceTest {
     @Test
     void editPost_ThrowInvalidParamException_WhenIdNull() {
         assertThrows(InvalidParamException.class, () -> postService.editPost(new PostDto(null, "title", "body")));
+    }
+
+    @Test
+    void editPost_ThrowNoSuchElementException_WhenIdNoMatch() {
+        assertThrows(NoSuchElementException.class, () -> postService.editPost(new PostDto(-1, "title", "body")));
     }
 
     @Test
