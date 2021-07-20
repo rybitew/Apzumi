@@ -17,11 +17,11 @@ public class PostService {
     }
 
     public List<PostDto> getByTitle(String title) {
-        return new LinkedList<>();
+        return null;
     }
 
     public List<PostDto> getAll() {
-        return new LinkedList<>();
+        return null;
     }
 
     public PostDto editPost(PostDto data) {
@@ -31,7 +31,7 @@ public class PostService {
     public void deletePost(Integer id) {
     }
 
-    public void updatePosts() {
-
+    public Long updatePosts() {
+        return null;
     }
 }
