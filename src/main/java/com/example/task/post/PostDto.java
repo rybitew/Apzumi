@@ -1,12 +1,14 @@
-package com.example.task.user;
+package com.example.task.post;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class PostDto {
     private Integer id;
     private String title;

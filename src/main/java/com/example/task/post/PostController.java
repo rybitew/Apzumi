@@ -1,4 +1,4 @@
-package com.example.task.user;
+package com.example.task.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class PostController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Long> updatePosts() {
+    public ResponseEntity<Integer> updatePosts() {
         return ResponseEntity.ok(postService.updatePosts());
     }
 

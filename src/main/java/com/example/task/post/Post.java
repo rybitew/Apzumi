@@ -1,4 +1,4 @@
-package com.example.task.user;
+package com.example.task.post;
 
 import lombok.*;
 
@@ -9,7 +9,6 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Post {
     @Id
@@ -24,4 +23,14 @@ public class Post {
 
     @Column
     private String body;
+
+    @Column
+    private Boolean edited = false;
+
+    public Post(Integer id, Integer userId, String title, String body) {
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+        this.body = body;
+    }
 }
