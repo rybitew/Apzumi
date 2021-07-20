@@ -1,4 +1,4 @@
-package com.example.task.user;
+package com.example.task.post;
 
 import com.example.task.exception.InvalidParamException;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,7 @@ class PostServiceTest {
 
     @MockBean
     private PostRepository postRepository;
-
-    @MockBean
-    private RestTemplate template;
-
-
+    
     @Test
     void getByTitle_ThrowInvalidParamException_WhenNullOrBlank() {
         assertThrows(InvalidParamException.class, () -> postService.getByTitle(null));
@@ -93,6 +88,8 @@ class PostServiceTest {
     void editPost_ReturnEditedTitle_WhenIdAndTitleNotNull() {
         Post post = new Post(1, 1, "Title", "Body");
         Mockito.when(postRepository.findById(1)).thenReturn(Optional.of(post));
+        Mockito.when(postRepository.save(Mockito.any(Post.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
 
         PostDto postToEdit = new PostDto(1, "Edited title", null);
         assertEquals(new PostDto(1, postToEdit.getTitle(), post.getBody()), postService.editPost(postToEdit));
@@ -102,6 +99,8 @@ class PostServiceTest {
     void editPost_ReturnEditedTitle_WhenIdAndBodyNotNull() {
         Post post = new Post(1, 1, "Title", "Body");
         Mockito.when(postRepository.findById(1)).thenReturn(Optional.of(post));
+        Mockito.when(postRepository.save(Mockito.any(Post.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
 
         PostDto postToEdit = new PostDto(1, null, "Edited body");
         assertEquals(new PostDto(1, post.getTitle(), postToEdit.getBody()), postService.editPost(postToEdit));
@@ -111,6 +110,8 @@ class PostServiceTest {
     void editPost_ReturnEditedTitle_WhenIdNotNull() {
         Post post = new Post(1, 1, "Title", "Body");
         Mockito.when(postRepository.findById(1)).thenReturn(Optional.of(post));
+        Mockito.when(postRepository.save(Mockito.any(Post.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
 
         PostDto postToEdit = new PostDto(1, null, null);
         assertEquals(new PostDto(post), postService.editPost(postToEdit));
@@ -124,17 +125,5 @@ class PostServiceTest {
     @Test
     void deletePost_NoException_WhenIdNotNull() {
         assertDoesNotThrow(() -> postService.deletePost(1));
-    }
-
-    @Test
-    void updatePosts() {
-        Post[] retrievedPosts = {
-                new Post(1, 1, "title1", "body1"),
-                new Post(2, 2, "title2", "body2")
-        };
-        Mockito.when(template.getForObject("https://jsonplaceholder.typicode.com/posts", Post[].class))
-                .thenReturn(retrievedPosts);
-
-        assertEquals(2L, postService.updatePosts());
     }
 }
