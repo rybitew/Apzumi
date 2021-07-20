@@ -34,9 +34,8 @@ public class PostController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> updatePosts() {
-        postService.updatePosts();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> updatePosts() {
+        return ResponseEntity.ok(postService.updatePosts());
     }
 
     @DeleteMapping("/delete/{id}")
